@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Model Preview – {{ object_name }}</title>
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .wrap { padding: 16px; }
+    model-viewer { width: 800px; height: 600px; }
+    #media { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-start; }
+    #media img, #media video { width: 190px; height: auto; border: 1px solid #ccc; }
+    #log { font: 12px/1.4 monospace; white-space: pre; margin-top: 8px; color: #555; }
+  </style>
+  <!-- model-viewer (web component) -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Preview: {{ object_name }}</h1>
+
+      <h2>Generated 3D Model</h2>
+    <!-- The model viewer; src will be set from /models/<object_name> -->
+    <model-viewer id="mv"
+      alt="{{ object_name }}"
+      shadow-intensity="1"
+      camera-controls
+      touch-action="pan-y"
+      ar
+      height="600px"
+    ></model-viewer>
+
+      <h2>Input Images</h2>
+    <!-- Images / video go here -->
+    <div id="media">
+
+    </div>
+    <div id="log"></div>
+  </div>
+
+  <script>
+    const objectName = "{{ object_name }}";
+    const mv   = document.getElementById('mv');
+    const media = document.getElementById('media');
+    const logEl = document.getElementById('log');
+    const log = (...a) => { console.log(...a); logEl.textContent += a.join(' ') + '\n'; };
+
+    fetch(`/models/${objectName}`)
+      .then(r => r.json())
+      .then(data => {
+        log('JSON:', JSON.stringify(data));
+
+        // Set model source (prefer GLB for model-viewer)
+        if (data.glb) {
+          mv.src = data.glb;          // e.g. "/files/<obj>/replicate_predictions/<obj>_output.glb"
+        } else {
+          log('No GLB in JSON; provide data.glb for model-viewer.');
+        }
+
+        // Optional: show video first if present
+        if (data.video) {
+          const vid = document.createElement('video');
+          vid.src = data.video;
+          vid.controls = true;
+          vid.preload = 'metadata';
+          vid.style.width = '390px';
+          media.appendChild(vid);
+        }
+
+        // Render images
+        if (Array.isArray(data.images)) {
+          data.images.forEach(src => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = src.split('/').pop() || 'capture';
+            img.onerror = () => {
+              const e = document.createElement('div');
+              e.textContent = `Failed to load: ${src}`;
+              e.style.color = '#a00';
+              e.style.fontFamily = 'monospace';
+              media.appendChild(e);
+            };
+            media.appendChild(img);
+          });
+        } else {
+          log('No images[] in JSON.');
+        }
+      })
+      .catch(e => log('models/ fetch failed:', e));
+  </script>
+</body>
+</html>
