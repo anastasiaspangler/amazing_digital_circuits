@@ -46,5 +46,3 @@ def serial_reader():
       if should:
         print(f"[ARDUINO] {now_str()} dial={v_use}")
         last[k] = v_use
-
-serial_reader()
