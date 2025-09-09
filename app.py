@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, render_template_string, send_from_directory, abort, url_for, jsonify
 from flask_socketio import SocketIO
-import os
+import os, sys
 from replicate_utils.capture_station import capture_and_process
 
 # Create Flask app
