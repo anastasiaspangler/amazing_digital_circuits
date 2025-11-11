@@ -1,60 +1,27 @@
-# Amazing Digital Circuits ⚡
+# **Amazing Digital Circuits**
 
-**Realtime control + on-the-fly reprogramming + prop generation = pure magic**
+## Overview
 <img width="1826" height="958" alt="original" src="https://github.com/user-attachments/assets/1654b05c-7c1e-47d5-acbc-d3783e43ae84" />
-
-## 🎯 What it is
-
-“Amazing Digital Circuits” is a system that allows you to:
-
-- **Reprogram a control board in *natural language*** (i.e. talk to it, it listens, it acts)
-- **Generate props / artifacts** in realtime using Blender & AI tooling
-- **Pipeline everything together** so it all plays live / interactively
+This project demonstrates a local, open-source pipeline for controlling Blender through natural language.  
+A lightweight model (**gpt-oss:20b**) interprets text commands and executes corresponding Python functions inside Blender via a Flask bridge.  
+The system enables full-scene manipulation and simple animation without directly using the Blender interface.
 
 ---
 
-## 🚀 Why I built it
+## System Description
 
-This project explores:
+### Core Components
 
-- Combining **hardware + software + AI** in one interactive system  
-- **Orchestrating real-time flows** instead of just static code  
-- Tackling problems where things break, timing matters, and multiple domains collide  
+| Component | Function |
+|------------|-----------|
+| **gpt-oss:20b** | Local open-source model served through Ollama. Maps natural language to Blender tool calls. |
+| **Flask server** | Handles remote procedure calls between the language model and Blender’s scripting API. |
+| **Blender scripting** | Executes generated Python functions (e.g., transformations, animations, object creation). |
+| **Optional physical controls** | Buttons mapped to stored tool calls for real-time, repeatable actions. |
 
----
-
-## 🧩 Architecture (high level)
-
-| Component | Role |
-|-----------|------|
-| **Language interface** | Accepts natural language commands (“do X”, “change Y”) |
-| **Control board module** | Takes commands, programs/tweaks hardware parameters in realtime |
-| **Blender / props engine** | Generates visual or physical props based on instructions |
-| **Orchestrator / glue** | Ensures smooth, low-latency interplay among modules |
-
----
-
-## 🛠️ Tech stack & key challenges
-
-- **Languages & tools**: Python, Blender scripting, possibly embedded C/C++ for control board  
-- **Realtime / latency**: minimizing lag between “command input” → “hardware response / prop output”  
-- **Error handling & safety**: fallback modes, sanity checks on commands  
-- **Scalable design**: modular so new hardware or effect modules can be swapped in  
-
----
-
-## 🎯 Demo / Proof
-
-1. Spin up `app.py` / `main.py` locally  
-2. Send a natural language command like “Change voltage on channel A to 5 V”  
-3. Watch the prop get adjusted / regenerated in Blender or the hardware respond  
-
----
-
-## 📂 How to use
-
-1. Clone the repo  
-2. Install dependencies (`pip install -r requirements.txt`)  
-3. Hook up the control board (if hardware is available)  
-4. Run `main.py` (or `app.py`)  
-5. Send a command, watch it dance  
+## How to Run it
+1. Have ollama serving in the background
+2. Copy and paste the blender code into the scripting tab of Blender a run.
+3. Set Replicate env. variable if you want to make props
+4. Run the Flask app
+5. Open the chat
