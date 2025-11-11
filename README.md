@@ -25,3 +25,8 @@ The system enables full-scene manipulation and simple animation without directly
 3. Set Replicate env. variable if you want to make props
 4. Run the Flask app
 5. Open the chat
+
+## Helpful Links
+I have a Repo just on remote control for Blender: https://github.com/anastasiaspangler/remote_blender
+Gpt-oss:20B Model Card: https://ollama.com/library/gpt-oss:20b
+
